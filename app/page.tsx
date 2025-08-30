@@ -2,7 +2,7 @@
 import TodoComponent from "@/components/todo";
 import TodoForm from "@/components/todoform";
 import { useEffect, useState } from "react";
-import { Todo } from "@/types/todo";
+import { Todo } from "@/types";
 import { ReactFormState } from "react-dom/client";
 
 // const todos = [
@@ -53,6 +53,24 @@ export default function Home() {
     localStorage.setItem("todos", JSON.stringify(todolist));
   }, [todolist]);
 
+  const handleMarkasCompleted = (id: string) => {
+    setTodolist((prevTodos) => {
+      const todotoupdate = prevTodos.find((todo) => todo.id === id);
+      if (todotoupdate) {
+        const updatedtodo = {
+          ...todotoupdate,
+          completed: todotoupdate.completed ? false : true,
+        };
+        return [
+          ...prevTodos.map((todo) => {
+            return todo.id === updatedtodo.id ? updatedtodo : todo
+          }),
+        ];
+      }
+      return prevTodos
+    });
+  };
+
   return (
     <div className="flex flex-col items-center bg-gray-100 min-h-screen py-10">
       <h1 className="text-4xl font-bold mb-6 text-blue-500">
@@ -77,6 +95,7 @@ export default function Home() {
           setIsediting={setIsediting}
           setCurrenttodo={setCurrenttodo}
           setTodolist={setTodolist}
+          handleMarkasCompleted={handleMarkasCompleted}
         />
       ))}
     </div>
